@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class BikeBrand(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -23,3 +22,18 @@ class BikeModel(models.Model):
 
     def __str__(self):
         return f"{self.brand.name} {self.name}"
+
+
+class Part(models.Model):
+    name = models.CharField(max_length=150)
+    part_number = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+
+    compatible_bikes = models.ManyToManyField(
+        BikeModel,
+        related_name="compatible_parts",
+        blank=True
+    )
+
+    def __str__(self):
+        return f"{self.name} - {self.part_number}"
