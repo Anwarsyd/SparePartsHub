@@ -35,10 +35,19 @@
 
 // export default App;
 
-import Login from "./pages/Login";
+// import Login from "./pages/Login";
+
+// function App() {
+//   return <Login />;
+// }
+
+// export default App;
+
+
+import Home from "./pages/Home";
 
 function App() {
-  return <Login />;
+  return <Home />;
 }
 
 export default App;
