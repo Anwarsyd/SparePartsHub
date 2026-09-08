@@ -53,7 +53,7 @@ class OrderItem(models.Model):
 
     quantity = models.PositiveIntegerField()
 
-    # Price at the time of ordering
+    # Price when the order was created
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2

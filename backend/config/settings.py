@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     "compatibility",
     "products",
     "cart",
-    "orders",
 ]
 
 MIDDLEWARE = [

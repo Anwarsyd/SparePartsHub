@@ -8,6 +8,7 @@ from cart.models import Cart
 
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
+from decimal import Decimal
 
 
 class CreateOrderView(generics.CreateAPIView):
@@ -28,16 +29,13 @@ class CreateOrderView(generics.CreateAPIView):
 
         if not cart_items.exists():
             return Response(
-                {"error": "Cart is empty"},
+                {
+                    "error": "Cart is empty"
+                },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        order = Order.objects.create(
-            user=request.user
-        )
-
-        total = 0
-
+        # Check stock before creating the order
         for item in cart_items:
 
             if not item.product.is_active:
@@ -62,18 +60,40 @@ class CreateOrderView(generics.CreateAPIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
+        # Create order
+        order = Order.objects.create(
+            user=request.user
+        )
+
+        total = Decimal("0")
+
+        # Create order items
+        for item in cart_items:
+
+            product = item.product
+
             OrderItem.objects.create(
                 order=order,
-                product=item.product,
+                product=product,
                 quantity=item.quantity,
-                price=item.product.price
+                price=product.price
             )
 
-            total += item.product.price * item.quantity
+            total += product.price * item.quantity
 
+            # Reduce stock
+            product.stock -= item.quantity
+            product.save(
+                update_fields=["stock"]
+            )
+
+        # Save total
         order.total_amount = total
-        order.save()
+        order.save(
+            update_fields=["total_amount", "updated_at"]
+        )
 
+        # Clear cart
         cart.items.all().delete()
 
         return Response(
@@ -88,9 +108,13 @@ class OrderListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Order.objects.filter(
-            user=self.request.user
-        ).prefetch_related("items__product")
+
+        return (
+            Order.objects
+            .filter(user=self.request.user)
+            .prefetch_related("items__product")
+            .order_by("-created_at")
+        )
 
 
 class OrderDetailView(generics.RetrieveAPIView):
@@ -99,6 +123,9 @@ class OrderDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Order.objects.filter(
-            user=self.request.user
-        ).prefetch_related("items__product")
+
+        return (
+            Order.objects
+            .filter(user=self.request.user)
+            .prefetch_related("items__product")
+        )
