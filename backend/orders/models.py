@@ -13,6 +13,15 @@ class Order(models.Model):
         DELIVERED = "DELIVERED", "Delivered"
         CANCELLED = "CANCELLED", "Cancelled"
 
+    class PaymentMethod(models.TextChoices):
+        COD = "COD", "Cash on Delivery"
+        MOCK = "MOCK", "Mock Payment"
+
+    class PaymentStatus(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        PAID = "PAID", "Paid"
+        FAILED = "FAILED", "Failed"
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -23,6 +32,18 @@ class Order(models.Model):
         max_length=20,
         choices=Status.choices,
         default=Status.PENDING
+    )
+
+    payment_method = models.CharField(
+    max_length=10,
+    choices=PaymentMethod.choices,
+    default=PaymentMethod.COD
+    )
+
+    payment_status = models.CharField(
+        max_length=10,
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.PENDING
     )
 
     total_amount = models.DecimalField(

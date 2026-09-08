@@ -21,6 +21,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+
     items = OrderItemSerializer(
         many=True,
         read_only=True
@@ -31,6 +32,8 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "status",
+            "payment_method",
+            "payment_status",
             "total_amount",
             "items",
             "created_at",
@@ -40,6 +43,7 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
             "status",
+            "payment_status",
             "total_amount",
             "items",
             "created_at",
