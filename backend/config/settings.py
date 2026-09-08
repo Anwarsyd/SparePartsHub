@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "compatibility",
     "products",
+    "cart",
 ]
 
 MIDDLEWARE = [
