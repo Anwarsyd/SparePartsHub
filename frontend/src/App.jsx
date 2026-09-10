@@ -1,53 +1,35 @@
-// import { useState } from "react";
-// import api from "./api/axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// function App() {
-//   const [message, setMessage] = useState("");
-
-//   const testAPI = async () => {
-//     try {
-//       const response = await api.post("/auth/register/", {
-//         email: "test@example.com",
-//         password: "TestPassword123",
-//         first_name: "Test",
-//         last_name: "User",
-//       });
-
-//       setMessage(response.data.message);
-//     } catch (error) {
-//       console.log(error.response?.data);
-//       setMessage(JSON.stringify(error.response?.data));
-//     }
-// };
-
-//   return (
-//     <div>
-//       <h1>SparePartsHub</h1>
-
-//       <button onClick={testAPI}>
-//         Test API
-//       </button>
-
-//       <p>{message}</p>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-// import Login from "./pages/Login";
-
-// function App() {
-//   return <Login />;
-// }
-
-// export default App;
-
+import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
+import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
-  return <Home />;
+  return (
+    <BrowserRouter>
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/orders/:id" element={<OrderDetails />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

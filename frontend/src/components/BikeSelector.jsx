@@ -48,33 +48,40 @@ function BikeSelector({ onPartsFound }) {
   };
 
   return (
-    <div>
+    <>
       <h2>Find Parts for Your Bike</h2>
 
-      <select value={selectedBrand} onChange={handleBrandChange}>
-        <option value="">Select Brand</option>
+      <div className="field">
+        <label htmlFor="brand">Brand</label>
+        <select id="brand" value={selectedBrand} onChange={handleBrandChange}>
+          <option value="">Select Brand</option>
 
-        {brands.map((brand) => (
-          <option key={brand.id} value={brand.id}>
-            {brand.name}
-          </option>
-        ))}
-      </select>
+          {brands.map((brand) => (
+            <option key={brand.id} value={brand.id}>
+              {brand.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <select
-        value={selectedModel}
-        onChange={handleModelChange}
-        disabled={!selectedBrand}
-      >
-        <option value="">Select Model</option>
+      <div className="field">
+        <label htmlFor="model">Model</label>
+        <select
+          id="model"
+          value={selectedModel}
+          onChange={handleModelChange}
+          disabled={!selectedBrand}
+        >
+          <option value="">Select Model</option>
 
-        {models.map((model) => (
-          <option key={model.id} value={model.id}>
-            {model.name} ({model.year_from}-{model.year_to})
-          </option>
-        ))}
-      </select>
-    </div>
+          {models.map((model) => (
+            <option key={model.id} value={model.id}>
+              {model.name} ({model.year_from}-{model.year_to})
+            </option>
+          ))}
+        </select>
+      </div>
+    </>
   );
 }
 

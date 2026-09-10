@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
       const response = await api.post("/auth/login/", {
@@ -17,46 +22,41 @@ function Login() {
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
 
-      console.log("Login successful");
-      
+      navigate("/");
     } catch (error) {
-      console.log(error.response?.data);
+      setError(
+        error.response?.data?.error || "Login failed. Check your credentials."
+      );
     }
   };
 
-    const getProfile = async () => {
-        try {
-            const response = await api.get("/auth/me/");
-            console.log(response.data);
-        } catch (error) {
-            console.log(error.response?.data);
-        }
-    };
-
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Login</h2>
+    <div className="page" style={{ maxWidth: 380 }}>
+      <form
+        onSubmit={handleLogin}
+        style={{ display: "flex", flexDirection: "column", gap: 12 }}
+      >
+        <h2>Login</h2>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button type="submit">Login</button>
+        <button type="submit">Login</button>
 
-      <button type="button" onClick={getProfile}>
-        Get Profile
-        </button>
-    </form>
+        {error && <p className="error">{error}</p>}
+      </form>
+    </div>
   );
 }
 

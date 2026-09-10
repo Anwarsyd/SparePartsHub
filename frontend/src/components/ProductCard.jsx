@@ -1,20 +1,30 @@
+import { Link } from "react-router-dom";
+
 function ProductCard({ product }) {
   return (
-    <div>
-      {product.image && (
-        <img
-          src={product.image}
-          alt={product.name}
-          width="200"
-        />
-      )}
+    <div className="card">
+      <div className="thumb">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            width="100%"
+            style={{ objectFit: "cover", borderRadius: 4 }}
+          />
+        ) : (
+          <span className="stock">No image</span>
+        )}
+      </div>
 
       <h3>{product.name}</h3>
-      <p>Part: {product.part_name}</p>
-      <p>₹{product.price}</p>
-      <p>Stock: {product.stock}</p>
+      <p className="part-no">Part: {product.part_name}</p>
+      <p className="part-no">Part Number: {product.part_number}</p>
+      <p className="price">₹{product.price}</p>
+      <p className="stock">Stock: {product.stock}</p>
 
-      <button>View Product</button>
+      <Link to={`/products/${product.id}`}>
+        View Product
+      </Link>
     </div>
   );
 }
